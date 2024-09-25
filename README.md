@@ -1,4 +1,4 @@
-# CapstoneProject
+# Capstone Project
 
 In here, I've worked on Location and Performing lab columns to de-identify.
 
@@ -35,10 +35,15 @@ For example we have Wales (Wales is a constituent country, but also there's a to
 Moreover, as Zahraa said that the dataset is about the UK only. So I'm wondering if we can do some preprocessing for the location to make it able to generalise. 
 
 **Example format:**
+
 "North West, England"
+
 "Liverpool, England"
+
 "Kent, England"
+
 "Wales, Wales"
+
 "Northern Ireland, Northern Ireland"
 
 -> format: "region/county name", "constituent country name" or "region/county name", "country name"
