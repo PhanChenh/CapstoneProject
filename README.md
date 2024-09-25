@@ -15,8 +15,7 @@ This will help user have a clear view of their data more than look at hash value
 **Note:** 
 As you noted that I did create a key and a matching which is not a good idea for de-identify.
 
-But I've set a code to delete the key and matching after use right after that by overwrite the key with 0, set it to None to clear from the computer memory, 
-and then delete the variable. 
+But I've set a code to delete the key and matching after use right after that by overwrite the key with 0, set it to None to clear the computer memory, and then delete the variable. 
 We can set the file permission to only be executed for user after we finalise everything to enhance the security. 
 
 In streamlit, I separate the hash and pseudonym methods so that it can be apply to any columns with separate methods.
