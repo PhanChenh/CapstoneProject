@@ -46,7 +46,7 @@ Moreover, as Zahraa said that the dataset is about the UK only. So I'm wondering
 
 "Northern Ireland, Northern Ireland"
 
--> format: "region/county name", "constituent country name" or "region/county name", "country name"
+-> format: "region/county name/first-level of administrative division", "constituent country name" or "region//first-level of administrative division", "country name"
 
 **Note:** 
 As the code I provided works on this format: "region/county name", "constituent country name" so I've provided a sample data.csv for you to have a look.
