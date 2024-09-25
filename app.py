@@ -62,8 +62,12 @@ def get_region(location):
     # Check if loc_name is in the unique regions of the filtered GeoDataFrame
     if loc_name in regions['name'].values:
         region_row = regions[regions['name'] == loc_name]
-        return region_row['region'].values[0] + ' ' + country_name if not region_row.empty else None
-    
+        
+        # Check if the 'region' field exists and is not empty
+        if not region_row.empty and 'region' in region_row.columns and not pd.isnull(region_row['region'].values[0]):
+            return region_row['region'].values[0] + ' ' + country_name
+        
+    # If no region data, return loc_name + country_name
     return loc_name + ' ' + country_name 
 
 
