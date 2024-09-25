@@ -136,8 +136,7 @@ if uploaded_file is not None:
     generalize_options = [
         'Generalize to Country Name',
         'Generalize to Constituent Country Name',
-        'Generalize to Region Name',
-        'Generalize to County Name'
+        'Generalize to Region Name'
     ]
     selected_generalize_methods = st.multiselect("Choose generalization methods", generalize_options)
 
@@ -174,9 +173,6 @@ if uploaded_file is not None:
                     hashed_value = hash_value_with_key(lab, encryption_key)
                     pseudonym_mapping[hashed_value] = generate_pseudonym(index, column)
                 df[f'{column} Pseudonymized'] = df[column].apply(lambda loc: pseudonym_mapping[hash_value_with_key(loc, encryption_key)])
-        
-        # Print pseudonym_mapping before deletion
-        print("Pseudonym mapping before deletion:", pseudonym_mapping)
 
         # Securely delete pseudonym_mapping after pseudonymization
         pseudonym_mapping.clear()  # Clear the dictionary contents
