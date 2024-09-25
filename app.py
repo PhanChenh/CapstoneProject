@@ -13,12 +13,10 @@ import gc
 # Load shapefiles (Update paths as necessary)
 country_shapefile = 'ne_10m_admin_0_countries_gbr/ne_10m_admin_0_countries_gbr.shp'
 region_shapefile = 'ne_10m_admin_1_states_provinces/ne_10m_admin_1_states_provinces.shp'
-county_shapefile = 'gadm41_GBR_shp/gadm41_GBR_4.shp'
 
 # Load GeodataFrames
 gdf0 = gpd.read_file(country_shapefile)
 gdf1 = gpd.read_file(region_shapefile)
-gdf_county = gpd.read_file(county_shapefile)
 
 # Extract necessary information for constituent countries
 uk = gdf0[gdf0['ADMIN'] == 'United Kingdom']
@@ -67,17 +65,6 @@ def get_region(location):
         return region_row['region'].values[0] + ' ' + country_name if not region_row.empty else None
     
     return loc_name + ' ' + country_name 
-
-# Function to retrieve county or district name
-def get_county_or_district(location, gdf_county):
-    loc_name = location.split(',')[0].strip()
-    if loc_name in gdf_county['NAME_3'].values:
-        matching_row = gdf_county[gdf_county['NAME_3'] == loc_name]
-        return matching_row['NAME_2'].values[0] if not matching_row.empty else None
-    elif loc_name in gdf_county['NAME_4'].values:
-        matching_row = gdf_county[gdf_county['NAME_4'] == loc_name]
-        return matching_row['NAME_2'].values[0] if not matching_row.empty else None
-    return loc_name
 
 
 # Function to generate a random encryption key
@@ -168,8 +155,6 @@ if uploaded_file is not None:
                     df[f'{column} Constituent Country'] = df[column].apply(lambda loc: get_constituent_country(loc, constituent_countries))
                 if 'Generalize to Region Name' in selected_generalize_methods:
                     df[f'{column} Region'] = df[column].apply(lambda loc: get_region(loc))
-                if 'Generalize to County Name' in selected_generalize_methods:
-                    df[f'{column} County'] = df[column].apply(lambda loc: get_county_or_district(loc, gdf_county))
 
 
     # Apply hashing
