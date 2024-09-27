@@ -68,6 +68,10 @@ Then you will want to choose column (e.g. Clinic Location) to preprocesing, you 
 
 You can choose delete column Constituent Country from <Clinic Location> and Clinic Location since we only need Formatted Location from <Clinic Location> for later use to extract region name. 
 
+**Note:**
+
+The preprocessing part is only for The UK. other country should follow this format: "region//first-level of administrative division", "country name"
+
 ## About the files:
 - ne_10m_admin_0_countries_gbr folder contain shapefile which will have country boundary.
 - ne_10m_admin_1_states_provinces folder contain shapefile which will have country states/provinces boundary.
