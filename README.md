@@ -55,6 +55,19 @@ In generalisation method, I created 4 different level: country name, constituent
 As I've checked, all county in the UK have population above 20,000 so it should be fine if we can make this far 
 (but I'm not sure about the data so the county level is still inappropriate).
 
+## Location Problem Solved
+
+Now you can run the preprocessing.py file on streamlit to do the location column preprocessing.
+Run the code with command: 
+```
+streamlit run preprocessing.py
+```
+Choose the data you want to preprocess, the data format in here remains the same as the original data that Zahraa gave us. 
+
+Then you will want to choose column (e.g. Clinic Location) to preprocesing, you will get 2 column name: Constituent Country from <Clinic Location> and Formatted Location from <Clinic Location>.
+
+You can choose delete column Constituent Country from <Clinic Location> and Clinic Location since we only need Formatted Location from <Clinic Location> for later use to extract region name. 
+
 ## About the files:
 - ne_10m_admin_0_countries_gbr folder contain shapefile which will have country boundary.
 - ne_10m_admin_1_states_provinces folder contain shapefile which will have country states/provinces boundary.
@@ -62,7 +75,8 @@ As I've checked, all county in the UK have population above 20,000 so it should 
 - capstone.csv is the file that we were provided (I changed the name).
 - data.csv is a sample file which have location column was formatted for generalise method.
 - requirement.txt is a file which contain all neccessary library to run the code.
-- app.py is contain streamlit code that you want to run. 
+- preprocessing.py is contain streamlit code that you want to run to clean and format the location columns for later use.
+- app.py is contain streamlit code that you want to run.
 - capstoneapp_V1.py is Kim's work on Clinic Name, you can have a look if you want. 
 
 ## Steps to run the code smoothly:
