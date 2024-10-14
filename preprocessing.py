@@ -1,70 +1,60 @@
-# WORKED WELL
-import streamlit as st
 import pandas as pd
 import requests
 import time
 
-# Load data file
-uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
-if uploaded_file:
-    df = pd.read_csv(uploaded_file)
-    
-    st.write("Original Data")
-    st.dataframe(df)
+class DataProcessor:
+    def __init__(self):
+        # Hardcoded mapping for the UK regions and countries
+        self.uk_region_to_country = {
+            # Wales
+            'Wales': 'Wales',
+            'North Wales': 'Wales',
+            'Mid Wales': 'Wales',
+            'South West Wales': 'Wales',
+            'South East Wales': 'Wales',
 
-    # Select columns to process
-    columns = df.columns.tolist()
-    selected_columns = st.multiselect("Select columns to preprocess", columns)
+            # Northern Ireland
+            'Northern Ireland': 'Northern Ireland',
 
-    # Hardcoded mapping for the UK regions and countries
-    uk_region_to_country = {
-        # Wales
-        'Wales': 'Wales',
-        'North Wales': 'Wales',
-        'Mid Wales': 'Wales',
-        'South West Wales': 'Wales',
-        'South East Wales': 'Wales',
-        
-        # Northern Ireland
-        'Northern Ireland': 'Northern Ireland',
-        
-        # Scotland
-        'Scotland': 'Scotland',
-        'Campbeltown': 'Scotland',
-        'Highland': 'Scotland',
-        'Islay': 'Scotland',
-        'Lowland': 'Scotland',
-        'Speyside': 'Scotland',
-        
-        # England
-        'England': 'England',
-        'Greater London': 'England',
-        'South East': 'England',
-        'South': 'England',
-        'West': 'England',
-        'West Midlands': 'England',
-        'Midlands': 'England',
-        'North West': 'England',
-        'North East': 'England',
-        'Yorkshire and the Humber': 'England',
-        'East Midlands': 'England',
-        'East of England': 'England',
-        'Yorkshire and Humber': 'England',
-    }
+            # Scotland
+            'Scotland': 'Scotland',
+            'Campbeltown': 'Scotland',
+            'Highland': 'Scotland',
+            'Islay': 'Scotland',
+            'Lowland': 'Scotland',
+            'Speyside': 'Scotland',
 
-    # Cleaning map for standardized constituent country names
-    cleaning_map = {
-        'Cymru / Wales': 'Wales',
-        'Northern Ireland / Tuaisceart Éireann': 'Northern Ireland',
-        'Alba / Scotland': 'Scotland',
-    }
+            # England
+            'England': 'England',
+            'Greater London': 'England',
+            'South East': 'England',
+            'South': 'England',
+            'West': 'England',
+            'West Midlands': 'England',
+            'Midlands': 'England',
+            'North West': 'England',
+            'North East': 'England',
+            'Yorkshire and the Humber': 'England',
+            'East Midlands': 'England',
+            'East of England': 'England',
+            'Yorkshire and Humber': 'England',
+        }
 
-    # Function to get constituent country dynamically using Nominatim
-    def get_constituent_country(location):
+        # Cleaning map for standardized constituent country names
+        self.cleaning_map = {
+            'Cymru / Wales': 'Wales',
+            'Northern Ireland / Tuaisceart Éireann': 'Northern Ireland',
+            'Alba / Scotland': 'Scotland',
+        }
+
+    def load_data(self, file_path):
+        return pd.read_csv(file_path)
+
+    def get_constituent_country(self, location):
         if "United Kingdom" not in location:
             return location.split(",")[0]  # Return the name before the comma if not in UK
 
-        for region, country in uk_region_to_country.items():
+        for region, country in self.uk_region_to_country.items():
             if region in location:
                 return country
         
@@ -90,38 +80,30 @@ if uploaded_file:
         
         return "Unknown"
 
-    # Preprocess each selected column
-    for column in selected_columns:
-        # Add ", United Kingdom" to each selected column
-        df[column] = df[column] + ', United Kingdom'
+    def preprocess_columns(self, df, selected_columns):
+        for column in selected_columns:
+            # Add ", United Kingdom" to each selected column
+            df[column] = df[column] + ', United Kingdom'
 
-        # Apply the function to get constituent country
-        constituent_countries = []
-        for location in df[column]:
-            country = get_constituent_country(location)
-            constituent_countries.append(country)
-            time.sleep(1)  # Delay to prevent hitting the rate limit
+            # Apply the function to get constituent country
+            constituent_countries = []
+            for location in df[column]:
+                country = self.get_constituent_country(location)
+                constituent_countries.append(country)
+                time.sleep(1)  # Delay to prevent hitting the rate limit
 
-        df[f'Constituent Country from {column}'] = constituent_countries
+            df[f'Constituent Country from {column}'] = constituent_countries
 
-        # Clean the constituent country data using the cleaning map
-        df[f'Constituent Country from {column}'] = df[f'Constituent Country from {column}'].replace(cleaning_map)
+            # Clean the constituent country data using the cleaning map
+            df[f'Constituent Country from {column}'] = df[f'Constituent Country from {column}'].replace(self.cleaning_map)
 
-        # Create a new column with "name, <constituent country>"
-        df[f'Formatted Location from {column}'] = df[column].str.replace(', United Kingdom', '') + ', ' + df[f'Constituent Country from {column}']
+            # Create a new column with "name, <constituent country>"
+            df[f'Formatted Location from {column}'] = df[column].str.replace(', United Kingdom', '') + ', ' + df[f'Constituent Country from {column}']
 
-    # Display processed data
-    st.write("Processed Data")
-    st.dataframe(df)
+        return df
 
-    # Select columns to delete
-    columns_to_delete = st.multiselect("Select columns to delete", df.columns)
-    if columns_to_delete:
-        df = df.drop(columns=columns_to_delete)
+    def delete_columns(self, df, columns_to_delete):
+        return df.drop(columns=columns_to_delete)
 
-    # Display final data
-    st.subheader("Final Data")
-    st.dataframe(df)
-        
-    # Download processed data
-    st.download_button("Download Processed Data", data=df.to_csv(index=False), file_name="processed_data.csv")
+    def save_data(self, df, file_path):
+        df.to_csv(file_path, index=False) 
