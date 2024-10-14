@@ -1,3 +1,7 @@
+import random
+import string
+import hashlib 
+
 # Class for hashing and pseudonymization
 class HashPseudonymization:
     def __init__(self):
@@ -26,14 +30,3 @@ class HashPseudonymization:
             hashed_value = self.hash_value_with_key(value, self.encryption_key)
             self.pseudonym_mapping[hashed_value] = self.generate_pseudonym(index, column)
         df[f'{column} Pseudonymized'] = df[column].apply(lambda loc: self.pseudonym_mapping[self.hash_value_with_key(loc, self.encryption_key)])
-
-    def secure_remove(self):
-        # Securely remove the encryption key and mapping
-        self.encryption_key = '0' * len(self.encryption_key)  # Overwrite with zeros
-        self.encryption_key = None  # Clear from memory
-        del self.encryption_key  # Delete the variable
-
-        # Securely clear the pseudonym mapping
-        self.pseudonym_mapping.clear()  # Clear the dictionary contents
-        self.pseudonym_mapping = None  # Overwrite reference with None to remove from memory
-        del self.pseudonym_mapping  # Explicitly delete the variable
