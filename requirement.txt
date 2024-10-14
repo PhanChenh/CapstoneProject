@@ -2,3 +2,7 @@ streamlit
 pandas
 geopandas
 shapely
+random
+string
+hashlib 
+request 
