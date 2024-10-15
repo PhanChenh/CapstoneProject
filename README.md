@@ -3,6 +3,7 @@
 In here, I've worked on Location and Performing lab columns to de-identify.
 
 ## Performing lab:
+
 For Performing lab, according to PPRL information.
 
 I generate a random encryption key, then combine the data in performing lab with that encryption key.
@@ -10,7 +11,7 @@ After that, I use hash method to hash that combine.
 This is more secure comparing to use hash method only (reduce re-identify risk even if the attacker has a potential data list) 
 
 After that, I create a pseudonym matching to apply pseudonym method on hash value above.
-This will help user have a clear view of their data more than look at hash value (a long string)
+This will help user/ analysis have a clear view of their data more than look at hash value (a long string)
 
 **Note:** 
 As you noted that I did create a key and a matching which is not a good idea for de-identify.
