@@ -4,7 +4,7 @@ In this project, I focused on de-identifying the 'Location' and 'Performing Lab'
 
 ## Performing lab:
 
-For the 'Performing Lab' column, I adhered to privacy-preserving record linkage (PPRL) guidelines. I generated a random encryption key and combined it with the data in the 'Performing Lab' column. This combined data was then hashed using a secure hashing method. This approach is more secure compared to simple hashing alone, as it reduces the risk of re-identification, even if an attacker possesses a potential data list.
+For the 'Performing Lab' column (which is a rpeated data column, not a unique column), I adhered to privacy-preserving record linkage (PPRL) guidelines. I generated a random encryption key and combined it with the data in the 'Performing Lab' column. This combined data was then hashed using a secure hashing method. This approach is more secure compared to simple hashing alone, as it reduces the risk of re-identification, even if an attacker possesses a potential data list.
 
 Subsequently, I applied pseudonymization to the hashed values by creating a pseudonym matching system. This method allows users and analysts to interpret the data more clearly than using the hash values alone, which typically appear as long strings.
 
