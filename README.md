@@ -2,8 +2,7 @@
 
 In here, I've worked on Location and Performing lab columns to de-identify.
 
-## Performing lab:
-
+## Performing lab: `hashingPseudonym.py`
 For Performing lab, according to PPRL information.
 
 I generate a random encryption key, then combine the data in performing lab with that encryption key.
