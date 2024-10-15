@@ -1,97 +1,86 @@
 # Capstone Project
 
-In here, I've worked on Location and Performing lab columns to de-identify.
+In this project, I focused on de-identifying the 'Location' and 'Performing Lab' columns in accordance with privacy regulations.
 
-## Performing lab: 
-For Performing lab, according to PPRL information.
+## Performing lab:
 
-I generate a random encryption key, then combine the data in performing lab with that encryption key.
-After that, I use hash method to hash that combine.
-This is more secure comparing to use hash method only (reduce re-identify risk even if the attacker has a potential data list) 
+For the 'Performing Lab' column, I adhered to privacy-preserving record linkage (PPRL) guidelines. I generated a random encryption key and combined it with the data in the 'Performing Lab' column. This combined data was then hashed using a secure hashing method. This approach is more secure compared to simple hashing alone, as it reduces the risk of re-identification, even if an attacker possesses a potential data list.
 
-After that, I create a pseudonym matching to apply pseudonym method on hash value above.
-This will help user/ analysis have a clear view of their data more than look at hash value (a long string)
+Subsequently, I applied pseudonymization to the hashed values by creating a pseudonym matching system. This method allows users and analysts to interpret the data more clearly than using the hash values alone, which typically appear as long strings.
 
-**Note:** 
-As you noted that I did create a key and a matching which is not a good idea for de-identify.
+**Note:** While creating an encryption key and matching system might not be ideal for de-identification, I implemented a mechanism to securely remove these elements after their use. This is done by overwriting the key with zeroes, setting it to `None` to clear the computer's memory, and then deleting the variable. Additionally, file permissions can be set to 'execute only' for users once all processes are finalized to enhance security further.
 
-But I've set a code to delete the key and matching after use right after that by overwrite the key with 0, set it to None to clear the computer memory, and then delete the variable. 
-We can set the file permission to only be executed for user after we finalise everything to enhance the security. 
-
-In streamlit, I separate the hash and pseudonym methods so that it can be apply to any columns with separate methods.
-
-But for pseudonym methods, it still attach to hash value, which I think this is a good idea to keep it like that 
-since pseudonym is not a one-way process like hashing (Pseudonymization is reversible). 
-(Hash does not relate to pseudonym, but pseudonym will process on hash value behind the scenes).
+In the Streamlit application, I separated the hash and pseudonym methods to allow flexibility in applying these methods to any column independently. However, the pseudonym method still relies on the hash values, which I believe is an effective approach, as pseudonymization is inherently reversible, unlike hashing (which is a one-way process). This means the pseudonymization process is based on the hash values behind the scenes.
 
 ## Location
-Following HIPAA guidelines, we can only generalise the location which have at least 20,000 inhabitants. 
 
-The data we were provided is quite a mess, some rows are region level, some are county level or I don't know if its a city/town/or village level to begin with.
+In compliance with HIPAA guidelines, locations were generalized only when they had a minimum population of 20,000 inhabitants. The dataset provided contained inconsistencies, with some rows at the region level, others at the county level, and some may at various levels of specificity (e.g., city, town, or village).
 
-For example we have Wales (Wales is a constituent country, but also there's a town/village named Wales in England)
+For example, entries like "Wales" could be ambiguous, as Wales is both a constituent country and a name used for towns or villages in England.
 
 ## Location Preprocessing
 
-Now you can run the preprocessing.py file on streamlit to do the location column preprocessing.
-Run the code with command: 
+To preprocess the 'Location' column, run the preprocessing.py file using Streamlit with the following command:
 ```
 streamlit run preprocessing.py
 ```
-Choose the data you want to preprocess, the data format in here remains the same as the original data that Zahraa gave us. 
+Select the dataset you want to preprocess. The data format remains consistent with the original format provided by Zahraa. You will then choose the column (e.g., 'Clinic Location') to preprocess, resulting in two new columns: 'Constituent Country from <Clinic Location>' and 'Formatted Location from <Clinic Location>'. You can delete the 'Constituent Country from <Clinic Location>' and 'Clinic Location' columns, retaining only the 'Formatted Location from <Clinic Location>' for subsequent use in extracting regional information.
 
-Then you will want to choose column (e.g. Clinic Location) to preprocesing, you will get 2 column name: Constituent Country from <Clinic Location> and Formatted Location from <Clinic Location>.
+**Note:** The preprocessing functionality currently supports locations in the UK. For other countries, the format should be structured as follows: "region//first-level administrative division," "country name."
 
-You can choose delete column Constituent Country from <Clinic Location> and Clinic Location since we only need Formatted Location from <Clinic Location> for later use to extract region name. 
-
-**Note:**
-
-The preprocessing part is only for The UK. other country should follow this format: "region//first-level of administrative division", "country name"
-
-**Desire format:**
-
+**Desired format example:**
 "North West, England"
+
 "Liverpool, England"
+
 "Kent, England"
+
 "Wales, Wales"
+
 "Northern Ireland, Northern Ireland"
 
--> format: "region/county name/first-level of administrative division", "constituent country name" or "region//first-level of administrative division", "country name"
+The format should follow this structure: "region/county name/first-level administrative division," "constituent country name" or "region//first-level administrative division," "country name."
 
-## Location format correctness
-After asking clients, we now know that the original data can able to get the exact location. 
+## Location format accuracy
+
+After consulting with Zahraa, it was confirmed that the original data could provide exact location details.
+
 **Example:**
 268 Belmont Avenue Corner, Fulham Street, Cloverdale WA 6105
+
 154 Newcastle Street, Perth WA 6000
+
 501 George Street, Sydney NSW 2000
+
 1 Avenue Claude Vellefaux, 75010 Paris, France
 
-Since we can get the exact location, we can extract the longitude, lattitude, country name, and hierachy of a country Administrative divisions name (states, surbub,...). 
+With this information, it is now possible to extract longitude, latitude, country names, and administrative divisions (e.g., states, suburbs). 
 
 
 ## About the files:
-- ne_10m_admin_0_countries_gbr folder contain shapefile which will have country boundary.
-- ne_10m_admin_1_states_provinces folder contain shapefile which will have country states/provinces boundary.
-- requirement.txt is a file which contain all neccessary library to run the code.
-- preprocessing.py is contain streamlit code that you want to run to clean and format the location columns for later use.
-- app.py is contain streamlit code that you want to run.
-- LocationGeneralizer.py is class module format file for generalise location column before knowing we can get exact location
-- exampleLoc.py is .py file working on extracting longitude, lattitude, country name, and hierachy of a country Administrative divisions name (states, surbub,...) after knowing we can get the exact location.
--  hashingPseudonym.py is class module format file for hashing pseudonym method.
--  SecureDataManager.py is class module format file for securely remove the key and matching created while use hashingPseudonym method.
+- `ne_10m_admin_0_countries_gbr` folder contains shapefiles with country boundaries.
+- `ne_10m_admin_1_states_provinces` folder contains shapefiles with state/province boundaries.
+- `requirement.txt` lists all necessary libraries for running the code.
+- `preprocessing.py` contains Streamlit code for cleaning and formatting the location column.
+- `app.py` contains the main Streamlit code for the application.
+- `LocationGeneralizer.py` is a class module for generalizing location columns before exact locations were available.
+- `exampleLoc.py` is a Python file for extracting longitude, latitude, country names, and administrative divisions after exact locations were confirmed.
+-  `hashingPseudonym.py`  is a class module for the hashing and pseudonymization methods.
+-  `SecureDataManager.py` is a class module for securely removing keys and matchings created during the hashing and pseudonymization processes.
 
-## Steps to run the code smoothly:
-Step 1: Locate to the correct directory where you save these file  
-Step 2: Install all neccessary library before you run the code in requirement.txt with command: 
+## Steps to Execute the Code
+
+Step 1: Navigate to the directory where the files are stored.  
+Step 2: Install all required libraries from `requirement.txt` using the command:
 ```
 pip install -r requirements.txt
 ```
-Step 3: Run the code with command: 
+Step 3: Run the code using command: 
 ```
 streamlit run preprocessing.py
 ```
-- run the command above if you want to get the location format as mention above to generalise
-- run the command below to de-identify data with specific column that I have worked on. 
+- Use the command above to format and generalize the location data as described.
+- Use the command below to de-identify data for specific columns:
 ```
 streamlit run app.py
 ```
