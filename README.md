@@ -22,7 +22,7 @@ For example, entries like "Wales" could be ambiguous, as Wales is both a constit
 
 To preprocess the 'Location' column, run the preprocessing.py file using Streamlit with the following command:
 ```
-streamlit run preprocessing.py
+streamlit run preprocessingBefore.py
 ```
 Select the dataset you want to preprocess. The data format remains consistent with the original format provided by Zahraa. You will then choose the column (e.g., 'Clinic Location') to preprocess, resulting in two new columns: 'Constituent Country from <Clinic Location>' and 'Formatted Location from <Clinic Location>'. You can delete the 'Constituent Country from <Clinic Location>' and 'Clinic Location' columns, retaining only the 'Formatted Location from <Clinic Location>' for subsequent use in extracting regional information.
 
@@ -61,10 +61,10 @@ With this information, it is now possible to extract longitude, latitude, countr
 - `ne_10m_admin_0_countries_gbr` folder contains shapefiles with country boundaries.
 - `ne_10m_admin_1_states_provinces` folder contains shapefiles with state/province boundaries.
 - `requirement.txt` lists all necessary libraries for running the code.
-- `preprocessing.py` contains Streamlit code for cleaning and formatting the location column.
-- `app.py` contains the main Streamlit code for the application.
-- `LocationGeneralizer.py` is a class module for generalizing location columns before exact locations were available.
-- `exampleLoc.py` is a Python file for extracting longitude, latitude, country names, and administrative divisions after exact locations were confirmed.
+- `preprocessingBefore.py` contains Streamlit code for cleaning and formatting the location column (Before knowing location column can be detailed).
+- `appBefore.py` contains the main Streamlit code for the application (Before knowing location column can be detailed).
+- `LocationGeneralizerBefore.py` is a class module for generalizing location columns before exact locations were available (Before knowing location column can be detailed).
+- `draftLocationGenAfter.py` is a Python file for extracting longitude, latitude, country names, and administrative divisions after exact locations were confirmed (After knowing location column can be detailed).
 -  `hashingPseudonym.py`  is a class module for the hashing and pseudonymization methods.
 -  `SecureDataManager.py` is a class module for securely removing keys and matchings created during the hashing and pseudonymization processes.
 
