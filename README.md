@@ -77,10 +77,10 @@ pip install -r requirements.txt
 ```
 Step 3: Run the code using command: 
 ```
-streamlit run preprocessing.py
+streamlit run preprocessingBefore.py
 ```
 - Use the command above to format and generalize the location data as described.
 - Use the command below to de-identify data for specific columns:
 ```
-streamlit run app.py
+streamlit run appBefore.py
 ```
