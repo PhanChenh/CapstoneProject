@@ -1,5 +1,9 @@
 import requests
 import re
+import spacy
+
+# Load the spaCy model for English
+nlp = spacy.load("en_core_web_sm")
 
 # Function to clean addresses
 def clean_address(address):
@@ -11,6 +15,20 @@ def clean_address(address):
     address = re.sub(r'\s+', ' ', address).strip()
     
     return address
+
+# Function to perform NLP-based location extraction
+def extract_location_nlp(address):
+    doc = nlp(address)
+    location_data = {"country": None, "state": None, "city": None}
+    for ent in doc.ents:
+        if ent.label_ == "GPE":  # Geopolitical entity (e.g., country, state, city)
+            if location_data["country"] is None:
+                location_data["country"] = ent.text
+            elif location_data["state"] is None:
+                location_data["state"] = ent.text
+            elif location_data["city"] is None:
+                location_data["city"] = ent.text
+    return location_data
 
 # Function to get coordinates and additional data from OpenCage
 def get_coordinates_opencage(address):
@@ -36,12 +54,11 @@ def get_coordinates_opencage(address):
         components = data['results'][0]['components']
         country_name = components.get('country', None)
         constituent_country_name = components.get('state', None)  # Administrative level 1
-        administrative_level_1 = components.get('suburb', None)  # Depending on the country, it could also be 'state' or similar
-        region = components.get('region', 'N/A')  # Extract region if available
+        administrative_level_1 = components.get('suburb', None)  # Could also be 'state' or similar
 
-        return latitude, longitude, country_name, constituent_country_name, administrative_level_1, region
+        return latitude, longitude, country_name, constituent_country_name, administrative_level_1
     else:
-        return None, None, None, None, None, None
+        return None, None, None, None, None
 
 # Example addresses for testing
 addresses = [
@@ -58,12 +75,19 @@ addresses = [
 for addr in addresses:
     cleaned_address = clean_address(addr)
     print(f"Cleaned Address: {cleaned_address}")
-    latitude, longitude, country_name, constituent_country_name, administrative_level_1, region = get_coordinates_opencage(cleaned_address)
+    latitude, longitude, country_name, constituent_country_name, administrative_level_1 = get_coordinates_opencage(cleaned_address)
+
+    # Extract location information using NLP
+    location_data = extract_location_nlp(cleaned_address)
+    country_nlp = location_data.get("country")
+    state_nlp = location_data.get("state")
+    city_nlp = location_data.get("city")
     
     if latitude is not None and longitude is not None:
         print(f"Address: {cleaned_address}\n"
               f"Latitude: {latitude}, Longitude: {longitude}\n"
-              f"Country Name: {country_name}, Constituent Country Name: {constituent_country_name}, "
-              f"Administrative Level 1: {administrative_level_1}, Region: {region}\n")
+              f"Country (API): {country_name}, State (API): {constituent_country_name}, "
+              f"Administrative Level 1: {administrative_level_1}\n"
+              f"Country (NLP): {country_nlp}, State (NLP): {state_nlp}, City (NLP): {city_nlp}\n")
     else:
         print(f"Failed to get coordinates for address: {cleaned_address}\n")
